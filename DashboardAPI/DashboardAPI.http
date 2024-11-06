@@ -1,0 +1,6 @@
+@DashboardAPI_HostAddress = http://localhost:5237
+
+GET {{DashboardAPI_HostAddress}}/xxx/
+Accept: application/json
+
+###

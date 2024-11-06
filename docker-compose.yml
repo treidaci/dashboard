@@ -1,0 +1,6 @@
+﻿services:
+  dashboardapi:
+    image: dashboardapi
+    build:
+      context: .
+      dockerfile: DashboardAPI/Dockerfile
