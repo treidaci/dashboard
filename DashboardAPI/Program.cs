@@ -1,3 +1,4 @@
+using DashboardApplication.DependencyInjection;
 using DashboardDataAccess.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,8 +7,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// add Sqlite
+// add layers
 builder.Services.AddDashboardDataAccess(builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty);
+builder.Services.AddDashboardApplication();
 
 var app = builder.Build();
 
