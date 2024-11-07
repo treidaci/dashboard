@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
         // Register DbContext with SQLite
         services.AddDbContext<DashboardDbContext>(options =>
             options.UseSqlite(connectionString));
-
+        
         // Register repository as IPlayerActivityRepository
         services.AddScoped<IPlayerActivityRepository, PlayerActivityRepository>();
 
