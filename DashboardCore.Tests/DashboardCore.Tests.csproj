@@ -20,4 +20,8 @@
         <Using Include="Xunit"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\DashboardCore\DashboardCore.csproj" />
+    </ItemGroup>
+
 </Project>
