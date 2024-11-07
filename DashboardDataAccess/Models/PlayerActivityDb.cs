@@ -1,6 +1,6 @@
 namespace DashboardDataAccess.Models;
 
-public class PlayerActivityDb
+internal class PlayerActivityDb
 {
     public string Id { get; set; }
     public string PlayerId { get; set; }

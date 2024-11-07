@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DashboardDataAccess;
 
-public class DashboardDbContext(DbContextOptions<DashboardDbContext> options) : DbContext(options)
+internal class DashboardDbContext(DbContextOptions<DashboardDbContext> options) : DbContext(options)
 {
     public DbSet<PlayerActivityDb> PlayerActivities { get; set; }
 

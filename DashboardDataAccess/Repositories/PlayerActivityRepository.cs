@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DashboardDataAccess.Repositories
 {
-    public class PlayerActivityRepository(DashboardDbContext context) : IPlayerActivityRepository
+    internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerActivityRepository
     {
         public async Task<IEnumerable<PlayerActivity>> GetActivitiesByPlayerIdAsync(string playerId)
         {
