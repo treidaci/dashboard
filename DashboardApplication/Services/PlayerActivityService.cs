@@ -5,9 +5,9 @@ using DashboardCore.Repositories;
 
 namespace DashboardApplication.Services;
 
-public class PlayerActivityService(IPlayerActivityRepository repository) : IPlayerActivityService
+internal class PlayerActivityService(IPlayerActivityRepository repository) : IPlayerActivityService
 {
-    public async Task<PlayerActivityListDto> ListPlayerActivities(string playerId)
+    public virtual async Task<PlayerActivityListDto> ListPlayerActivities(string playerId)
     {
         var activities = await repository.GetActivitiesByPlayerIdAsync(playerId);
 
@@ -23,7 +23,7 @@ public class PlayerActivityService(IPlayerActivityRepository repository) : IPlay
         return new PlayerActivityListDto(playerId, activityDtos);
     }
 
-    public async Task CreatePlayerActivity(string playerId, CreatePlayerActivityDto createPlayerActivityDto)
+    public virtual async Task<string> CreatePlayerActivity(string playerId, CreatePlayerActivityDto createPlayerActivityDto)
     {
         var playerActivity = new PlayerActivity(
             id: Guid.NewGuid().ToString(), // create id here maybe we want to use it further down the line
@@ -33,5 +33,7 @@ public class PlayerActivityService(IPlayerActivityRepository repository) : IPlay
         );
         
         await repository.AddPlayerActivityAsync(playerActivity);
+        
+        return playerActivity.Id;
     }
 }

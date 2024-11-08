@@ -14,7 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardCore.Tests", "Dash
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardDataAccess", "DashboardDataAccess\DashboardDataAccess.csproj", "{C39D3AC6-D532-4B76-9E43-ECCF23F2C7D6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardDataAccessTests", "DashboardDataAccessTests\DashboardDataAccessTests.csproj", "{9CF45B06-0310-4582-8154-F403497F854C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DashboardDataAccess.Tests", "DashboardDataAccess.Tests\DashboardDataAccess.Tests.csproj", "{9CF45B06-0310-4582-8154-F403497F854C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

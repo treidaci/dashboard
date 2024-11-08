@@ -107,4 +107,89 @@ public class PlayerActivityRepositoryTests
         Assert.Equal(playerActivity.PlayerId, savedActivity.PlayerId);
         Assert.Equal(playerActivity.Action, savedActivity.Action);
     }
+    
+    [Fact]
+    public async Task GetActivity_ShouldReturnActivity_WhenActivityExists()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+        
+        // Act
+        var result = await repository.GetActivity("2", "Player123");
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal("2", result.Id);
+        Assert.Equal("Player123", result.PlayerId);
+        Assert.Equal("Jump", result.Action);
+        Assert.Equal(PlayerActivityStatus.Legitimate, result.Status);
+        Assert.Equal("Inhuman speed", result.Reason);
+    }
+
+    [Fact]
+    public async Task GetActivity_ShouldReturnNull_WhenActivityDoesNotExist()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        // Act
+        var result = await repository.GetActivity("NonExistentId", "Player123");
+
+        // Assert
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task UpdateActivity_ShouldUpdateExistingActivityInDatabase()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        var updatedActivity = new PlayerActivity(
+            id: "2",
+            playerId: "Player123",
+            action: "Climb",
+            timestamp: DateTime.UtcNow,
+            status: PlayerActivityStatus.Malicious,
+            reason: "Repeated suspicious actions"
+        );
+
+        // Act
+        await repository.UpdateActivity(updatedActivity);
+
+        // Assert
+        var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "2" && a.PlayerId == "Player123");
+        Assert.NotNull(savedActivity);
+        Assert.Equal("Climb", savedActivity.Action);
+        Assert.Equal(PlayerActivityStatus.Malicious.ToString(), savedActivity.Status);
+        Assert.Equal("Repeated suspicious actions", savedActivity.Reason);
+    }
+
+    [Fact]
+    public async Task UpdateActivity_ShouldNotThrowException_WhenActivityDoesNotExist()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        var nonExistentActivity = new PlayerActivity(
+            id: "NonExistentId",
+            playerId: "Player123",
+            action: "Fly",
+            timestamp: DateTime.UtcNow,
+            status: PlayerActivityStatus.Malicious,
+            reason: "Non-existent activity"
+        );
+
+        // Act
+        await repository.UpdateActivity(nonExistentActivity);
+
+        // Assert
+        // Ensure that no exception is thrown and the database remains unchanged
+        var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "NonExistentId");
+        Assert.Null(savedActivity);
+    }
 }

@@ -90,4 +90,22 @@ public class PlayerActivityServiceTests
             Times.Once
         );
     }
+    
+    [Fact]
+    public async Task CreatePlayerActivity_ShouldReturnPlayerActivityId()
+    {
+        // Arrange
+        var playerId = "Player123";
+        var createPlayerActivityDto = new CreatePlayerActivityDto
+        {
+            Action = "Move",
+            Timestamp = DateTime.UtcNow
+        };
+
+        // Act
+        var id = await _service.CreatePlayerActivity(playerId, createPlayerActivityDto);
+        
+        // Assert
+        Assert.NotNull(id);
+    }
 }

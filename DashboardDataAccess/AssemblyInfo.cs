@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DashboardDataAccessTests")]
+[assembly: InternalsVisibleTo("DashboardDataAccess.Tests")]
