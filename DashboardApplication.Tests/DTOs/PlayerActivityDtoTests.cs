@@ -11,17 +11,17 @@ public class PlayerActivityDtoTests
         var id = "1";
         var action = "Move";
         var timestamp = DateTime.UtcNow;
-        var isSuspicious = true;
+        var status = "Any status";
         var reason = "Repeated actions";
 
         // Act
-        var playerActivityDto = new PlayerActivityDto(id, action, timestamp, isSuspicious, reason);
+        var playerActivityDto = new PlayerActivityDto(id, action, timestamp, status, reason);
 
         // Assert
         Assert.Equal(id, playerActivityDto.Id);
         Assert.Equal(action, playerActivityDto.Action);
         Assert.Equal(timestamp, playerActivityDto.Timestamp);
-        Assert.Equal(isSuspicious, playerActivityDto.IsSuspicious);
+        Assert.Equal(status, playerActivityDto.Status);
         Assert.Equal(reason, playerActivityDto.Reason);
     }
 }

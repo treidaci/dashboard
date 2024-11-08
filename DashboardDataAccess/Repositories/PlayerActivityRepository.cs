@@ -20,7 +20,7 @@ namespace DashboardDataAccess.Repositories
                 a.PlayerId,
                 a.Action,
                 a.Timestamp,
-                a.IsSuspicious,
+                Enum.Parse<PlayerActivityStatus>(a.Status),
                 a.Reason
             )).ToList();
         }
@@ -33,7 +33,7 @@ namespace DashboardDataAccess.Repositories
                 PlayerId = playerActivity.PlayerId, 
                 Action = playerActivity.Action, 
                 Timestamp = playerActivity.Timestamp, 
-                IsSuspicious = playerActivity.IsSuspicious, 
+                Status = playerActivity.Status.ToString(), 
                 Reason = playerActivity.Reason
             });
             

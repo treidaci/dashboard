@@ -16,7 +16,7 @@ public class PlayerActivityService(IPlayerActivityRepository repository) : IPlay
            activity.Id,
             activity.Action,
             activity.Timestamp,
-            activity.IsSuspicious,
+            activity.Status.ToString(),
             activity.Reason
         )).ToList();
 

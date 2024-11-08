@@ -8,11 +8,11 @@ public class PlayerActivityListDtoTests
     public void PlayerActivityListDto_Constructor_ShouldSetProperties()
     {
         // Arrange
-        var playerId = "Player123";
+        const string playerId = "Player123";
         var activities = new List<PlayerActivityDto>
         {
-            new PlayerActivityDto("1", "Move", DateTime.UtcNow, false, null),
-            new PlayerActivityDto("2", "Jump", DateTime.UtcNow, true, "Inhuman speed")
+            new("1", "Move", DateTime.UtcNow, "Good", null),
+            new("2", "Jump", DateTime.UtcNow, "Bad", "Inhuman speed")
         };
 
         // Act

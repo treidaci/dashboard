@@ -24,9 +24,9 @@ public class PlayerActivityRepositoryTests
     {
         var activities = new List<PlayerActivityDb>
         {
-            new() { Id = "1", PlayerId = "Player123", Action = "Move", Timestamp = DateTime.UtcNow, IsSuspicious = false, Reason = null },
-            new() { Id = "2", PlayerId = "Player123", Action = "Jump", Timestamp = DateTime.UtcNow, IsSuspicious = true, Reason = "Inhuman speed" },
-            new() { Id = "3", PlayerId = "Player456", Action = "Run", Timestamp = DateTime.UtcNow, IsSuspicious = false, Reason = null }
+            new() { Id = "1", PlayerId = "Player123", Action = "Move", Timestamp = DateTime.UtcNow, Status = "Suspicious", Reason = null },
+            new() { Id = "2", PlayerId = "Player123", Action = "Jump", Timestamp = DateTime.UtcNow, Status = "Legitimate", Reason = "Inhuman speed" },
+            new() { Id = "3", PlayerId = "Player456", Action = "Run", Timestamp = DateTime.UtcNow, Status = "Malicious", Reason = null }
         };
 
         await context.PlayerActivities.AddRangeAsync(activities);
@@ -80,7 +80,7 @@ public class PlayerActivityRepositoryTests
         var activity = result.FirstOrDefault(a => a.Id == "2");
         Assert.NotNull(activity);
         Assert.Equal("Jump", activity.Action);
-        Assert.True(activity.IsSuspicious);
+        Assert.Equal(PlayerActivityStatus.Legitimate, activity.Status);
         Assert.Equal("Inhuman speed", activity.Reason);
     }
     

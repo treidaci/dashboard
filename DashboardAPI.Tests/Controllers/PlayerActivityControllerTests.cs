@@ -25,8 +25,8 @@ public class PlayerActivityControllerTests
         // Arrange
         var playerId = "Player123";
         var playerActivities = new PlayerActivityListDto(playerId, [
-            new PlayerActivityDto("1", "Move", DateTime.UtcNow, false, null),
-            new PlayerActivityDto("2", "Jump", DateTime.UtcNow, true, "Inhuman speed")
+            new PlayerActivityDto("1", "Move", DateTime.UtcNow, "Legitimate", null),
+            new PlayerActivityDto("2", "Jump", DateTime.UtcNow, "Suspicious", "Inhuman speed")
         ]);
 
         _mockPlayerActivityService

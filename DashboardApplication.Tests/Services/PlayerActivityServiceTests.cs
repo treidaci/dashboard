@@ -25,7 +25,7 @@ public class PlayerActivityServiceTests
         var activities = new List<PlayerActivity>
         {
             new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow),
-            new PlayerActivity("2", "Player123", "Jump", DateTime.UtcNow, true)
+            new PlayerActivity("2", "Player123", "Jump", DateTime.UtcNow, PlayerActivityStatus.Legitimate, "Legitimate")
         };
         
         _mockRepository.Setup(repo => repo.GetActivitiesByPlayerIdAsync(playerId))
@@ -44,7 +44,7 @@ public class PlayerActivityServiceTests
             Assert.Equal(activities[i].Id, result.Activities[i].Id);
             Assert.Equal(activities[i].Action, result.Activities[i].Action);
             Assert.Equal(activities[i].Timestamp, result.Activities[i].Timestamp);
-            Assert.Equal(activities[i].IsSuspicious, result.Activities[i].IsSuspicious);
+            Assert.Equal(activities[i].Status.ToString(), result.Activities[i].Status);
             Assert.Equal(activities[i].Reason, result.Activities[i].Reason);
         }
     }
