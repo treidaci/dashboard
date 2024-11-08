@@ -3,7 +3,7 @@ using DashboardCore.Repositories;
 
 namespace DashboardApplication.Library.Detection;
 
-internal class DetectionService(IPlayerActivityRepository playerActivityRepository, List<IDetectionRule> rules) : IDetectionService
+internal class DetectionService(IPlayerActivityRepository playerActivityRepository, IEnumerable<IDetectionRule> rules) : IDetectionService
 {
     public async Task AnalysePlayerActivity(string id, string playerId)
     {

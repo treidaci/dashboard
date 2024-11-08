@@ -19,6 +19,8 @@ public class PlayerActivity(string id, string playerId, string action, DateTime 
     public void MarkAsSuspicious(string? reason)
     {
         Status = PlayerActivityStatus.Suspicious;
+        // on all of these methods, we could append the reason so
+        // we could capture a history of why the activity is suspicious
         Reason = reason;
     }
     public void MarkAsMalicious(string? reason)

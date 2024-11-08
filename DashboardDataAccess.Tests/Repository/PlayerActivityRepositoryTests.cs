@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using DashboardCore.Entities;
 using DashboardDataAccess;
 using DashboardDataAccess.Models;
@@ -191,5 +192,46 @@ public class PlayerActivityRepositoryTests
         // Ensure that no exception is thrown and the database remains unchanged
         var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "NonExistentId");
         Assert.Null(savedActivity);
+    }
+    
+    [Fact]
+    public async Task GetActivitiesByFilter_ShouldReturnFilteredActivities()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        // Define the filter expression
+        Expression<Func<PlayerActivity, bool>> filter = a => a.PlayerId == "Player123" && a.Action == "Jump";
+
+        // Act
+        var result = await repository.GetActivitiesByFilter(filter);
+
+        // Assert
+        Assert.NotNull(result);
+        var resultList = result.ToList();
+        Assert.Single(resultList); // Expecting only one match
+        Assert.Equal("Player123", resultList[0].PlayerId);
+        Assert.Equal("Jump", resultList[0].Action);
+        Assert.Equal(PlayerActivityStatus.Legitimate, resultList[0].Status);
+        Assert.Equal("Inhuman speed", resultList[0].Reason);
+    }
+
+    [Fact]
+    public async Task GetActivitiesByFilter_ShouldReturnEmptyList_WhenNoActivitiesMatchFilter()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        // Define a filter that will not match any activities
+        Expression<Func<PlayerActivity, bool>> filter = a => a.PlayerId == "NonExistentPlayer";
+
+        // Act
+        var result = await repository.GetActivitiesByFilter(filter);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result); // Expecting an empty list
     }
 }

@@ -81,7 +81,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsSuspicious(reason);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Suspicious);
+        Assert.Equal(PlayerActivityStatus.Suspicious, playerActivity.Status);
         Assert.Equal(reason, playerActivity.Reason);
     }
 
@@ -95,7 +95,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsSuspicious(null);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Suspicious);
+        Assert.Equal(PlayerActivityStatus.Suspicious, playerActivity.Status);
         Assert.Null(playerActivity.Reason);
     }
     
@@ -110,7 +110,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsLegitimate(reason);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Legitimate);
+        Assert.Equal(PlayerActivityStatus.Legitimate, playerActivity.Status);
         Assert.Equal(reason, playerActivity.Reason);
     }
 
@@ -124,7 +124,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsLegitimate(null);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Legitimate);
+        Assert.Equal(PlayerActivityStatus.Legitimate, playerActivity.Status);
         Assert.Null(playerActivity.Reason);
     }
     
@@ -139,7 +139,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsMalicious(reason);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Malicious);
+        Assert.Equal(PlayerActivityStatus.Malicious, playerActivity.Status);
         Assert.Equal(reason, playerActivity.Reason);
     }
 
@@ -153,7 +153,7 @@ public class PlayerActivityTests
         playerActivity.MarkAsMalicious(null);
 
         // Assert
-        Assert.Equal(playerActivity.Status, PlayerActivityStatus.Malicious);
+        Assert.Equal(PlayerActivityStatus.Malicious, playerActivity.Status);
         Assert.Null(playerActivity.Reason);
     }
 }

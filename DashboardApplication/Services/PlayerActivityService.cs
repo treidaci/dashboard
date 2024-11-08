@@ -26,7 +26,7 @@ internal class PlayerActivityService(IPlayerActivityRepository repository) : IPl
     public virtual async Task<string> CreatePlayerActivity(string playerId, CreatePlayerActivityDto createPlayerActivityDto)
     {
         var playerActivity = new PlayerActivity(
-            id: Guid.NewGuid().ToString(), // create id here maybe we want to use it further down the line
+            id: Guid.NewGuid().ToString(),
             playerId,
             action: createPlayerActivityDto.Action,
             timestamp: createPlayerActivityDto.Timestamp

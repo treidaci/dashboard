@@ -27,7 +27,7 @@ public class DetectionServiceTests
         ruleMock2.Setup(rule => rule.Apply(activity)).ReturnsAsync(true);
         ruleMock3.Setup(rule => rule.Apply(activity)).ReturnsAsync(false);
 
-        var detectionService = new DetectionService(repositoryMock.Object, new List<IDetectionRule> { ruleMock1.Object, ruleMock2.Object, ruleMock3.Object });
+        var detectionService = new DetectionService(repositoryMock.Object, [ ruleMock1.Object, ruleMock2.Object, ruleMock3.Object ]);
 
         // Act
         await detectionService.AnalysePlayerActivity("1", "Player123");
@@ -56,7 +56,7 @@ public class DetectionServiceTests
         ruleMock1.Setup(rule => rule.Apply(activity)).ReturnsAsync(false);
         ruleMock2.Setup(rule => rule.Apply(activity)).ReturnsAsync(false);
 
-        var detectionService = new DetectionService(repositoryMock.Object, new List<IDetectionRule> { ruleMock1.Object, ruleMock2.Object });
+        var detectionService = new DetectionService(repositoryMock.Object, [ ruleMock1.Object, ruleMock2.Object ]);
 
         // Act
         await detectionService.AnalysePlayerActivity("1", "Player123");
@@ -79,7 +79,7 @@ public class DetectionServiceTests
         repositoryMock.Setup(repo => repo.GetActivity("NonExistentId", "Player123"))
             .ReturnsAsync((PlayerActivity?)null);
 
-        var detectionService = new DetectionService(repositoryMock.Object, new List<IDetectionRule> { ruleMock1.Object, ruleMock2.Object });
+        var detectionService = new DetectionService(repositoryMock.Object, [ ruleMock1.Object, ruleMock2.Object ]);
 
         // Act
         await detectionService.AnalysePlayerActivity("NonExistentId", "Player123");
