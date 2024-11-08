@@ -13,3 +13,32 @@ Content-Type: application/json
   "action": "Move",
   "timestamp": "2023-11-12T15:45:00Z"
 }
+
+### Create Player Activity in a loop
+< {%
+    request.variables.set("activities", [ // test data
+        {"action": "Move", "timestamp": "2023-11-12T15:46:05Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:46:06Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:46:07Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:46:08Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:46:09Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:46:10Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:47:00Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:47:00Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:47:00Z"},
+        {"action": "Move", "timestamp": "2023-11-12T15:47:00Z"},
+    ])
+%}
+POST {{DashboardAPI_HostAddress}}/players/{{playerId}}/activity
+Content-Type: application/json
+
+{
+  "action": "{{$.activities..action}}",
+  "timestamp": "{{$.activities..timestamp}}"
+}
+> {%
+    let current = request.variables.get("activities")[request.iteration()]
+    client.test(`Activity ${current.action} with timestamp ${current.timestamp}`, () => {
+        client.assert(response.status == 200)
+    })
+%}
