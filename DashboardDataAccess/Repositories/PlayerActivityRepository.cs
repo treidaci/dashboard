@@ -1,5 +1,6 @@
 using DashboardCore.Entities;
 using DashboardCore.Repositories;
+using DashboardDataAccess.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DashboardDataAccess.Repositories
@@ -22,6 +23,22 @@ namespace DashboardDataAccess.Repositories
                 a.IsSuspicious,
                 a.Reason
             )).ToList();
+        }
+
+        public async Task AddPlayerActivityAsync(PlayerActivity playerActivity)
+        {
+            await context.PlayerActivities.AddAsync(new PlayerActivityDb
+            {
+                Id = playerActivity.Id,
+                PlayerId = playerActivity.PlayerId, 
+                Action = playerActivity.Action, 
+                Timestamp = playerActivity.Timestamp, 
+                IsSuspicious = playerActivity.IsSuspicious, 
+                Reason = playerActivity.Reason
+            });
+            
+            // Save changes to the database
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -6,3 +6,9 @@ Building a Bot and Malicious Player Detection Dashboard
 `dotnet tool install --global dotnet-ef`
 ## to update ef tools globally
 `dotnet tool update --global dotnet-ef`
+
+
+# Nice to haves
+ - [ ] global exception handling
+ - [ ] add mapper in between the layers 
+ - [ ] add a tool like autofixure with automoq to generate random test data

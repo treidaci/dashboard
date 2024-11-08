@@ -1,5 +1,6 @@
 using DashboardApplication.DTOs;
 using DashboardApplication.UseCases;
+using DashboardCore.Entities;
 using DashboardCore.Repositories;
 
 namespace DashboardApplication.Services;
@@ -20,5 +21,17 @@ public class PlayerActivityService(IPlayerActivityRepository repository) : IPlay
         )).ToList();
 
         return new PlayerActivityListDto(playerId, activityDtos);
+    }
+
+    public async Task CreatePlayerActivity(CreatePlayerActivityDto createPlayerActivityDto)
+    {
+        var playerActivity = new PlayerActivity(
+            id: Guid.NewGuid().ToString(), // create id here maybe we want to use it further down the line
+            playerId: createPlayerActivityDto.PlayerId,
+            action: createPlayerActivityDto.Action,
+            timestamp: createPlayerActivityDto.Timestamp
+        );
+        
+        await repository.AddPlayerActivityAsync(playerActivity);
     }
 }

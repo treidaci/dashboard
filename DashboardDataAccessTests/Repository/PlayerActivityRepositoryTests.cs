@@ -1,3 +1,4 @@
+using DashboardCore.Entities;
 using DashboardDataAccess;
 using DashboardDataAccess.Models;
 using DashboardDataAccess.Repositories;
@@ -81,5 +82,29 @@ public class PlayerActivityRepositoryTests
         Assert.Equal("Jump", activity.Action);
         Assert.True(activity.IsSuspicious);
         Assert.Equal("Inhuman speed", activity.Reason);
+    }
+    
+    [Fact]
+    public async Task AddPlayerActivityAsync_ShouldAddPlayerActivityToDatabase()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        var playerActivity = new PlayerActivity(
+            id: "4",
+            playerId: "Player123",
+            action: "Move",
+            timestamp: DateTime.UtcNow
+        );
+
+        // Act
+        await repository.AddPlayerActivityAsync(playerActivity);
+
+        // Assert
+        var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "4");
+        Assert.NotNull(savedActivity);
+        Assert.Equal(playerActivity.PlayerId, savedActivity.PlayerId);
+        Assert.Equal(playerActivity.Action, savedActivity.Action);
     }
 }

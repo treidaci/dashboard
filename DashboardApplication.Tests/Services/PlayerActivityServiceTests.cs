@@ -1,3 +1,4 @@
+using DashboardApplication.DTOs;
 using DashboardApplication.Services;
 using DashboardCore.Entities;
 using DashboardCore.Repositories;
@@ -63,5 +64,30 @@ public class PlayerActivityServiceTests
         Assert.NotNull(result);
         Assert.Equal(playerId, result.PlayerId);
         Assert.Empty(result.Activities);
+    }
+    
+    [Fact]
+    public async Task CreatePlayerActivity_ShouldCallAddPlayerActivityAsync()
+    {
+        // Arrange
+        var createPlayerActivityDto = new CreatePlayerActivityDto
+        {
+            PlayerId = "Player123",
+            Action = "Move",
+            Timestamp = DateTime.UtcNow
+        };
+
+        // Act
+        await _service.CreatePlayerActivity(createPlayerActivityDto);
+
+        // Assert
+        _mockRepository.Verify(
+            repo => repo.AddPlayerActivityAsync(It.Is<PlayerActivity>(
+                activity => activity.PlayerId == createPlayerActivityDto.PlayerId &&
+                            activity.Action == createPlayerActivityDto.Action &&
+                            activity.Timestamp == createPlayerActivityDto.Timestamp
+            )),
+            Times.Once
+        );
     }
 }

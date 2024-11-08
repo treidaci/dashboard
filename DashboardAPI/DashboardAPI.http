@@ -1,6 +1,14 @@
 @DashboardAPI_HostAddress = http://localhost:5237
-@playerId=playa20
+@playerId=Player123
 GET {{DashboardAPI_HostAddress}}/playeractivity/activities/{{playerId}}
 Accept: application/json
 
 ###
+POST http://localhost:5237/PlayerActivity/activities
+Content-Type: application/json
+
+{
+  "playerId": "Player123",
+  "action": "Move",
+  "timestamp": "2023-11-12T15:45:00Z"
+}

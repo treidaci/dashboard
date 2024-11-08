@@ -82,4 +82,45 @@ public class PlayerActivityControllerTests
         Assert.Equal(500, objectResult.StatusCode);
         Assert.Equal("An error occurred while processing your request.", objectResult.Value);
     }
+    
+    [Fact]
+    public async Task CreatePlayerActivity_ShouldReturnOk_WhenActivityIsCreated()
+    {
+        // Arrange
+        var createPlayerActivityDto = new CreatePlayerActivityDto
+        {
+            PlayerId = "Player123",
+            Action = "Move",
+            Timestamp = DateTime.UtcNow
+        };
+
+        // Act
+        var result = await _controller.CreatePlayerActivity(createPlayerActivityDto);
+
+        // Assert
+        var okResult = Assert.IsType<OkResult>(result);
+        Assert.Equal(200, okResult.StatusCode);
+
+        _mockPlayerActivityService.Verify(
+            service => service.CreatePlayerActivity(createPlayerActivityDto),
+            Times.Once
+        );
+    }
+
+    [Fact]
+    public async Task CreatePlayerActivity_ShouldReturnBadRequest_WhenDtoIsNull()
+    {
+        // Act
+        var result = await _controller.CreatePlayerActivity(null);
+
+        // Assert
+        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+        Assert.Equal(400, badRequestResult.StatusCode);
+        Assert.Equal("Invalid player activity data.", badRequestResult.Value);
+
+        _mockPlayerActivityService.Verify(
+            service => service.CreatePlayerActivity(It.IsAny<CreatePlayerActivityDto>()),
+            Times.Never
+        );
+    }
 }
