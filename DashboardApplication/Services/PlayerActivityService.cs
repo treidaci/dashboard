@@ -23,11 +23,11 @@ public class PlayerActivityService(IPlayerActivityRepository repository) : IPlay
         return new PlayerActivityListDto(playerId, activityDtos);
     }
 
-    public async Task CreatePlayerActivity(CreatePlayerActivityDto createPlayerActivityDto)
+    public async Task CreatePlayerActivity(string playerId, CreatePlayerActivityDto createPlayerActivityDto)
     {
         var playerActivity = new PlayerActivity(
             id: Guid.NewGuid().ToString(), // create id here maybe we want to use it further down the line
-            playerId: createPlayerActivityDto.PlayerId,
+            playerId,
             action: createPlayerActivityDto.Action,
             timestamp: createPlayerActivityDto.Timestamp
         );

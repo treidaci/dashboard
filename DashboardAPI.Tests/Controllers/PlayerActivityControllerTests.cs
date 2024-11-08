@@ -87,22 +87,22 @@ public class PlayerActivityControllerTests
     public async Task CreatePlayerActivity_ShouldReturnOk_WhenActivityIsCreated()
     {
         // Arrange
+        var playerId = "Player123";
         var createPlayerActivityDto = new CreatePlayerActivityDto
         {
-            PlayerId = "Player123",
             Action = "Move",
             Timestamp = DateTime.UtcNow
         };
 
         // Act
-        var result = await _controller.CreatePlayerActivity(createPlayerActivityDto);
+        var result = await _controller.CreatePlayerActivity(playerId, createPlayerActivityDto);
 
         // Assert
         var okResult = Assert.IsType<OkResult>(result);
         Assert.Equal(200, okResult.StatusCode);
 
         _mockPlayerActivityService.Verify(
-            service => service.CreatePlayerActivity(createPlayerActivityDto),
+            service => service.CreatePlayerActivity(playerId, createPlayerActivityDto),
             Times.Once
         );
     }
@@ -110,8 +110,10 @@ public class PlayerActivityControllerTests
     [Fact]
     public async Task CreatePlayerActivity_ShouldReturnBadRequest_WhenDtoIsNull()
     {
+        // Arrange
+        var playerId = "Player123";
         // Act
-        var result = await _controller.CreatePlayerActivity(null);
+        var result = await _controller.CreatePlayerActivity(playerId, null);
 
         // Assert
         var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
@@ -119,7 +121,7 @@ public class PlayerActivityControllerTests
         Assert.Equal("Invalid player activity data.", badRequestResult.Value);
 
         _mockPlayerActivityService.Verify(
-            service => service.CreatePlayerActivity(It.IsAny<CreatePlayerActivityDto>()),
+            service => service.CreatePlayerActivity(playerId, It.IsAny<CreatePlayerActivityDto>()),
             Times.Never
         );
     }

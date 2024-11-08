@@ -70,20 +70,20 @@ public class PlayerActivityServiceTests
     public async Task CreatePlayerActivity_ShouldCallAddPlayerActivityAsync()
     {
         // Arrange
+        var playerId = "Player123";
         var createPlayerActivityDto = new CreatePlayerActivityDto
         {
-            PlayerId = "Player123",
             Action = "Move",
             Timestamp = DateTime.UtcNow
         };
 
         // Act
-        await _service.CreatePlayerActivity(createPlayerActivityDto);
+        await _service.CreatePlayerActivity(playerId, createPlayerActivityDto);
 
         // Assert
         _mockRepository.Verify(
             repo => repo.AddPlayerActivityAsync(It.Is<PlayerActivity>(
-                activity => activity.PlayerId == createPlayerActivityDto.PlayerId &&
+                activity => activity.PlayerId == playerId &&
                             activity.Action == createPlayerActivityDto.Action &&
                             activity.Timestamp == createPlayerActivityDto.Timestamp
             )),

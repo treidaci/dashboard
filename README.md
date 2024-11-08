@@ -12,3 +12,4 @@ Building a Bot and Malicious Player Detection Dashboard
  - [ ] global exception handling
  - [ ] add mapper in between the layers 
  - [ ] add a tool like autofixure with automoq to generate random test data
+ - [ ] custom assertions to increase test readability

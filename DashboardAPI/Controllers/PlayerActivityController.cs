@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace DashboardAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/players/{playerId}")]
 public class PlayerActivityController(ILogger<PlayerActivityController> logger, IPlayerActivityService playerActivityService) : ControllerBase
 {
-    [HttpGet("activities/{playerId}")]
+    [HttpGet("activities")]
     public async Task<ActionResult<PlayerActivityListDto>> GetPlayerActivities(string playerId)
     {
         // exception handling can be moved in a global exception filter or a middleware
@@ -32,15 +32,15 @@ public class PlayerActivityController(ILogger<PlayerActivityController> logger, 
         }
     }
     
-    [HttpPost("activities")]
-    public async Task<ActionResult> CreatePlayerActivity([FromBody] CreatePlayerActivityDto? createPlayerActivityDto)
+    [HttpPost("activity")]
+    public async Task<ActionResult> CreatePlayerActivity(string playerId, [FromBody] CreatePlayerActivityDto? createPlayerActivityDto)
     {
         if (createPlayerActivityDto == null)
         {
             return BadRequest("Invalid player activity data.");
         }
 
-        await playerActivityService.CreatePlayerActivity(createPlayerActivityDto);
+        await playerActivityService.CreatePlayerActivity(playerId, createPlayerActivityDto);
 
         // in this instance, returning no data from this endpoint
         // makes sense as creating player doesn't require any further input from the player
