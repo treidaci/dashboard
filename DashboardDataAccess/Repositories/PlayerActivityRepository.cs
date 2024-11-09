@@ -41,7 +41,7 @@ internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerAct
         if (activityDb == null) return null;
             
         return new PlayerActivity(activityDb.Id, activityDb.PlayerId, activityDb.Action, activityDb.Timestamp, 
-            Enum.Parse<PlayerActivityStatus>(activityDb.Status), activityDb.Reason);
+            activityDb.Status, activityDb.Reason);
     }
 
     public async Task UpdateActivity(PlayerActivity activity)
@@ -98,7 +98,7 @@ internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerAct
             a.PlayerId,
             a.Action,
             a.Timestamp,
-            Enum.Parse<PlayerActivityStatus>(a.Status),
+            a.Status,
             a.Reason
         )).ToList();
     }

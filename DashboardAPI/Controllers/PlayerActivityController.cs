@@ -46,4 +46,17 @@ public class PlayerActivityController(ILogger<PlayerActivityController> logger, 
         // makes sense as creating player doesn't require any further input from the player
         return Ok();
     }
+    
+    [HttpPut("activity")]
+    public async Task<ActionResult> UpdatePlayerActivity(string playerId, [FromBody] UpdatePlayerActivityDto? updatePlayerActivityDto)
+    {
+        if (updatePlayerActivityDto == null)
+        {
+            return BadRequest("Invalid player activity data.");
+        }
+
+        await playerActivityService.UpdatePlayerActivity(playerId, updatePlayerActivityDto);
+        
+        return Ok();
+    }
 }

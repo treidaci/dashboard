@@ -125,4 +125,40 @@ public class PlayerActivityControllerTests
             Times.Never
         );
     }
+    
+    [Fact]
+        public async Task UpdatePlayerActivity_ShouldReturnBadRequest_WhenDtoIsNull()
+        {
+            // Arrange
+            var playerId = "Player123";
+
+            // Act
+            var result = await _controller.UpdatePlayerActivity(playerId, null);
+
+            // Assert
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
+            Assert.Equal(400, badRequestResult.StatusCode);
+            Assert.Equal("Invalid player activity data.", badRequestResult.Value);
+        }
+
+        [Fact]
+        public async Task UpdatePlayerActivity_ShouldReturnOk_WhenDtoIsValid()
+        {
+            // Arrange
+            var playerId = "Player123";
+            var updatePlayerActivityDto = new UpdatePlayerActivityDto("1", "Legitimate", "Updated reason");
+
+            // Act
+            var result = await _controller.UpdatePlayerActivity(playerId, updatePlayerActivityDto);
+
+            // Assert
+            var okResult = Assert.IsType<OkResult>(result);
+            Assert.Equal(200, okResult.StatusCode);
+
+            _mockPlayerActivityService.Verify(
+                service => service.UpdatePlayerActivity(playerId, updatePlayerActivityDto),
+                Times.Once,
+                "UpdatePlayerActivity should be called once with the provided DTO"
+            );
+        }
 }

@@ -7,6 +7,11 @@ public class PlayerActivity(string id, string playerId, string action, DateTime 
         Status = status;
         Reason = reason;
     }
+    public PlayerActivity(string id, string playerId, string action, DateTime timestamp, string status, string? reason) : this(id, playerId, action, timestamp)
+    {
+        Status = Enum.Parse<PlayerActivityStatus>(status);
+        Reason = reason;
+    }
     public string Id { get; } = id;
     public string PlayerId { get; } = playerId;
     public string Action { get; } = action;
@@ -21,16 +26,6 @@ public class PlayerActivity(string id, string playerId, string action, DateTime 
         Status = PlayerActivityStatus.Suspicious;
         // on all of these methods, we could append the reason so
         // we could capture a history of why the activity is suspicious
-        Reason = reason;
-    }
-    public void MarkAsMalicious(string? reason)
-    {
-        Status = PlayerActivityStatus.Malicious;
-        Reason = reason;
-    }
-    public void MarkAsLegitimate(string? reason)
-    {
-        Status = PlayerActivityStatus.Legitimate;
         Reason = reason;
     }
 }

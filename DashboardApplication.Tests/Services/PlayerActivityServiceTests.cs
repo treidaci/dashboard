@@ -24,8 +24,8 @@ public class PlayerActivityServiceTests
         var playerId = "Player123";
         var activities = new List<PlayerActivity>
         {
-            new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow),
-            new PlayerActivity("2", "Player123", "Jump", DateTime.UtcNow, PlayerActivityStatus.Legitimate, "Legitimate")
+            new("1", "Player123", "Move", DateTime.UtcNow),
+            new("2", "Player123", "Jump", DateTime.UtcNow, PlayerActivityStatus.Legitimate, "Legitimate")
         };
         
         _mockRepository.Setup(repo => repo.GetActivitiesByPlayerId(playerId))
@@ -107,5 +107,56 @@ public class PlayerActivityServiceTests
         
         // Assert
         Assert.NotNull(id);
+    }
+    
+    [Fact]
+    public async Task UpdatePlayerActivity_ShouldUpdateActivity_WhenActivityExists()
+    {
+        // Arrange
+        var playerId = "Player123";
+        var existingActivity = new PlayerActivity("1", playerId, "Move", DateTime.UtcNow, PlayerActivityStatus.Legitimate, "Initial reason");
+
+        var updatePlayerActivityDto = new UpdatePlayerActivityDto("1", "Suspicious", "Updated reason");
+
+        _mockRepository.Setup(repo => repo.GetActivity(updatePlayerActivityDto.Id, playerId))
+            .ReturnsAsync(existingActivity);
+
+        // Act
+        await _service.UpdatePlayerActivity(playerId, updatePlayerActivityDto);
+
+        // Assert
+        _mockRepository.Verify(
+            repo => repo.UpdateActivity(It.Is<PlayerActivity>(
+                activity => activity.Id == existingActivity.Id &&
+                            activity.PlayerId == existingActivity.PlayerId &&
+                            activity.Action == existingActivity.Action &&
+                            activity.Timestamp == existingActivity.Timestamp &&
+                            activity.Status == PlayerActivityStatus.Suspicious &&
+                            activity.Reason == "Updated reason"
+            )),
+            Times.Once,
+            "UpdateActivity should be called once with the correct updated PlayerActivity"
+        );
+    }
+
+    [Fact]
+    public async Task UpdatePlayerActivity_ShouldNotUpdateActivity_WhenActivityDoesNotExist()
+    {
+        // Arrange
+        var playerId = "Player123";
+        var updatePlayerActivityDto = new UpdatePlayerActivityDto("NonExistentId", "Malicious", "Non-existent activity");
+
+        _mockRepository.Setup(repo => repo.GetActivity(updatePlayerActivityDto.Id, playerId))
+            .ReturnsAsync((PlayerActivity?)null);
+
+        // Act
+        await _service.UpdatePlayerActivity(playerId, updatePlayerActivityDto);
+
+        // Assert
+        _mockRepository.Verify(
+            repo => repo.UpdateActivity(It.IsAny<PlayerActivity>()),
+            Times.Never,
+            "UpdateActivity should not be called when the activity does not exist"
+        );
     }
 }

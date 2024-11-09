@@ -100,60 +100,89 @@ public class PlayerActivityTests
     }
     
     [Fact]
-    public void MarkAsLegitimate_ShouldSetStatusToLegitimateAndSetReason()
+    public void Constructor_ShouldInitializePropertiesCorrectly_WithValidStatusString()
     {
         // Arrange
-        var playerActivity = new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow);
-        const string reason = "Seems legitimate";
+        var id = "1";
+        var playerId = "Player123";
+        var action = "Move";
+        var timestamp = DateTime.UtcNow;
+        var status = "Suspicious";
+        var reason = "Repeated action";
 
         // Act
-        playerActivity.MarkAsLegitimate(reason);
+        var activity = new PlayerActivity(id, playerId, action, timestamp, status, reason);
 
         // Assert
-        Assert.Equal(PlayerActivityStatus.Legitimate, playerActivity.Status);
-        Assert.Equal(reason, playerActivity.Reason);
+        Assert.Equal(id, activity.Id);
+        Assert.Equal(playerId, activity.PlayerId);
+        Assert.Equal(action, activity.Action);
+        Assert.Equal(timestamp, activity.Timestamp);
+        Assert.Equal(PlayerActivityStatus.Suspicious, activity.Status);
+        Assert.Equal(reason, activity.Reason);
     }
 
     [Fact]
-    public void MarkAsLegitimate_AllowsNullReason()
+    public void Constructor_ShouldSetStatusToLegitimate_WhenStatusStringIsLegitimate()
     {
         // Arrange
-        var playerActivity = new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow);
+        var id = "2";
+        var playerId = "Player456";
+        var action = "Run";
+        var timestamp = DateTime.UtcNow;
+        var status = "Legitimate";
+        string reason = null;
 
         // Act
-        playerActivity.MarkAsLegitimate(null);
+        var activity = new PlayerActivity(id, playerId, action, timestamp, status, reason);
 
         // Assert
-        Assert.Equal(PlayerActivityStatus.Legitimate, playerActivity.Status);
-        Assert.Null(playerActivity.Reason);
-    }
-    
-    [Fact]
-    public void MarkAsMalicious_ShouldSetStatusToMaliciousAndSetReason()
-    {
-        // Arrange
-        var playerActivity = new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow);
-        const string reason = "Seems malicious";
-
-        // Act
-        playerActivity.MarkAsMalicious(reason);
-
-        // Assert
-        Assert.Equal(PlayerActivityStatus.Malicious, playerActivity.Status);
-        Assert.Equal(reason, playerActivity.Reason);
+        Assert.Equal(id, activity.Id);
+        Assert.Equal(playerId, activity.PlayerId);
+        Assert.Equal(action, activity.Action);
+        Assert.Equal(timestamp, activity.Timestamp);
+        Assert.Equal(PlayerActivityStatus.Legitimate, activity.Status);
+        Assert.Null(activity.Reason);
     }
 
     [Fact]
-    public void MarkAsMalicious_AllowsNullReason()
+    public void Constructor_ShouldSetStatusToMalicious_WhenStatusStringIsMalicious()
     {
         // Arrange
-        var playerActivity = new PlayerActivity("1", "Player123", "Move", DateTime.UtcNow);
+        var id = "3";
+        var playerId = "Player789";
+        var action = "Attack";
+        var timestamp = DateTime.UtcNow;
+        var status = "Malicious";
+        var reason = "Unauthorized action";
 
         // Act
-        playerActivity.MarkAsMalicious(null);
+        var activity = new PlayerActivity(id, playerId, action, timestamp, status, reason);
 
         // Assert
-        Assert.Equal(PlayerActivityStatus.Malicious, playerActivity.Status);
-        Assert.Null(playerActivity.Reason);
+        Assert.Equal(id, activity.Id);
+        Assert.Equal(playerId, activity.PlayerId);
+        Assert.Equal(action, activity.Action);
+        Assert.Equal(timestamp, activity.Timestamp);
+        Assert.Equal(PlayerActivityStatus.Malicious, activity.Status);
+        Assert.Equal(reason, activity.Reason);
+    }
+
+    [Fact]
+    public void Constructor_ShouldThrowArgumentException_WhenStatusStringIsInvalid()
+    {
+        // Arrange
+        var id = "4";
+        var playerId = "Player987";
+        var action = "Defend";
+        var timestamp = DateTime.UtcNow;
+        var invalidStatus = "InvalidStatus";
+        var reason = "Unrecognized status";
+
+        // Act & Assert
+        var exception = Assert.Throws<ArgumentException>(() => 
+            new PlayerActivity(id, playerId, action, timestamp, invalidStatus, reason));
+
+        Assert.Contains("Requested value 'InvalidStatus' was not found", exception.Message);
     }
 }

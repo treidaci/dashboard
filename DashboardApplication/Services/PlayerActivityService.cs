@@ -36,4 +36,17 @@ internal class PlayerActivityService(IPlayerActivityRepository repository) : IPl
         
         return playerActivity.Id;
     }
+
+    public virtual async Task UpdatePlayerActivity(string playerId, UpdatePlayerActivityDto updatePlayerActivityDto)
+    {
+        var existingActivity = await repository.GetActivity(updatePlayerActivityDto.Id, playerId);
+        if (existingActivity == null)
+        {
+            return;
+        }
+        
+        await repository.UpdateActivity(new PlayerActivity(existingActivity.Id,
+            existingActivity.PlayerId, existingActivity.Action, 
+            existingActivity.Timestamp, updatePlayerActivityDto.Status, updatePlayerActivityDto.Reason));
+    }
 }
