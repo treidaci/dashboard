@@ -3,7 +3,7 @@ using DashboardCore.Repositories;
 
 namespace DashboardApplication.Library.Detection.Rules;
 
-public class IdenticalActionRule(IPlayerActivityRepository playerActivityRepository) : BaseActionRule
+internal class IdenticalActionRule(IPlayerActivityRepository playerActivityRepository) : BaseActionRule
 {
     protected override string Reason()
     {
@@ -15,7 +15,9 @@ public class IdenticalActionRule(IPlayerActivityRepository playerActivityReposit
     {
         var activities = await playerActivityRepository.GetActivitiesByFilter(a=> a.PlayerId == activity.PlayerId && 
                                                            a.Action == activity.Action &&
-                                                           a.Timestamp == activity.Timestamp);
+                                                           a.Timestamp == activity.Timestamp && 
+                                                           a.Id != activity.Id // Exclude the current activity itself
+            );
         return activities.Any();
     }
 }

@@ -28,7 +28,7 @@ public class PlayerActivityServiceTests
             new PlayerActivity("2", "Player123", "Jump", DateTime.UtcNow, PlayerActivityStatus.Legitimate, "Legitimate")
         };
         
-        _mockRepository.Setup(repo => repo.GetActivitiesByPlayerIdAsync(playerId))
+        _mockRepository.Setup(repo => repo.GetActivitiesByPlayerId(playerId))
             .ReturnsAsync(activities);
 
         // Act
@@ -54,7 +54,7 @@ public class PlayerActivityServiceTests
     {
         // Arrange
         var playerId = "Player123";
-        _mockRepository.Setup(repo => repo.GetActivitiesByPlayerIdAsync(playerId))
+        _mockRepository.Setup(repo => repo.GetActivitiesByPlayerId(playerId))
             .ReturnsAsync(new List<PlayerActivity>()); // No activities
 
         // Act
@@ -82,7 +82,7 @@ public class PlayerActivityServiceTests
 
         // Assert
         _mockRepository.Verify(
-            repo => repo.AddPlayerActivityAsync(It.Is<PlayerActivity>(
+            repo => repo.AddActivity(It.Is<PlayerActivity>(
                 activity => activity.PlayerId == playerId &&
                             activity.Action == createPlayerActivityDto.Action &&
                             activity.Timestamp == createPlayerActivityDto.Timestamp

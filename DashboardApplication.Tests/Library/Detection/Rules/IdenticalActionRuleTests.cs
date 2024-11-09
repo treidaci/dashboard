@@ -90,5 +90,4 @@ public class IdenticalActionRuleTests
         Assert.Equal(PlayerActivityStatus.Suspicious, activity.Status);
         Assert.Equal("Identical action", activity.Reason);
     }
-    
 }

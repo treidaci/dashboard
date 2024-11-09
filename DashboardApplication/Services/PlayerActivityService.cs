@@ -9,7 +9,7 @@ internal class PlayerActivityService(IPlayerActivityRepository repository) : IPl
 {
     public virtual async Task<PlayerActivityListDto> ListPlayerActivities(string playerId)
     {
-        var activities = await repository.GetActivitiesByPlayerIdAsync(playerId);
+        var activities = await repository.GetActivitiesByPlayerId(playerId);
 
         // Map each PlayerActivity entity to a PlayerActivityDto - could use a mapper
         var activityDtos = activities.Select(activity => new PlayerActivityDto(
@@ -32,7 +32,7 @@ internal class PlayerActivityService(IPlayerActivityRepository repository) : IPl
             timestamp: createPlayerActivityDto.Timestamp
         );
         
-        await repository.AddPlayerActivityAsync(playerActivity);
+        await repository.AddActivity(playerActivity);
         
         return playerActivity.Id;
     }

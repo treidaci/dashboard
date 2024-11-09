@@ -9,7 +9,7 @@ namespace DashboardDataAccess.Repositories;
 
 internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerActivityRepository
 {
-    public async Task<IEnumerable<PlayerActivity>> GetActivitiesByPlayerIdAsync(string playerId)
+    public async Task<IEnumerable<PlayerActivity>> GetActivitiesByPlayerId(string playerId)
     {
         var activities = await context.PlayerActivities
             .Where(a => a.PlayerId == playerId)
@@ -18,7 +18,7 @@ internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerAct
         return PlayerActivitiesDbToPlayerActivities(activities);
     }
 
-    public async Task AddPlayerActivityAsync(PlayerActivity playerActivity)
+    public async Task AddActivity(PlayerActivity playerActivity)
     {
         await context.PlayerActivities.AddAsync(new PlayerActivityDb
         {
@@ -69,6 +69,22 @@ internal class PlayerActivityRepository(DashboardDbContext context) : IPlayerAct
 
         var activities = await context.PlayerActivities
             .Where(dbFilter)
+            .ToListAsync();
+
+        return PlayerActivitiesDbToPlayerActivities(activities);
+    }
+
+    public async Task<IEnumerable<PlayerActivity>> GetActivitiesWithinThreshold(PlayerActivity activity, TimeSpan threshold)
+    {
+        // Define the time range based on the threshold
+        var startTime = activity.Timestamp - threshold;
+        var endTime = activity.Timestamp + threshold;
+        
+        var activities = await context.PlayerActivities
+            .Where(a=>a.PlayerId == activity.PlayerId && 
+                      a.Timestamp >= startTime &&
+                      a.Timestamp <= endTime &&
+                      a.Id != activity.Id)
             .ToListAsync();
 
         return PlayerActivitiesDbToPlayerActivities(activities);

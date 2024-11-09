@@ -37,8 +37,8 @@ public class PlayerActivityWithDetectionServiceTests
         // Assert
         Assert.NotEmpty(result);
 
-        _mockRepository.Verify(repo => repo.AddPlayerActivityAsync(It.IsAny<PlayerActivity>()), Times.Once,
-            "AddPlayerActivityAsync should be called once to create the activity.");
+        _mockRepository.Verify(repo => repo.AddActivity(It.IsAny<PlayerActivity>()), Times.Once,
+            "AddActivity should be called once to create the activity.");
     }
 
     [Fact]

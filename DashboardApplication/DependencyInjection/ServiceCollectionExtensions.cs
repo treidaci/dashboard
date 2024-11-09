@@ -1,4 +1,3 @@
-using DashboardApplication.Library;
 using DashboardApplication.Library.Detection;
 using DashboardApplication.Library.Detection.Rules;
 using DashboardApplication.Services;
@@ -9,14 +8,13 @@ namespace DashboardApplication.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDashboardApplication(this IServiceCollection services)
+    public static void AddDashboardApplication(this IServiceCollection services)
     {
         // this can be extended to read settings from a configuration file
         // you could deploy instances of the api with detection or without detection
         services.AddScoped<IPlayerActivityService, PlayerActivityWithDetectionService>();
         services.AddScoped<IDetectionService, DetectionService>();
         services.AddScoped<IDetectionRule, IdenticalActionRule>();
-
-        return services;
+        services.AddScoped<IDetectionRule, InhumanSpeedActionRule>();
     }
 }

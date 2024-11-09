@@ -7,7 +7,7 @@ namespace DashboardDataAccess.DependencyInjection;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddDashboardDataAccess(this IServiceCollection services, string connectionString)
+    public static void AddDashboardDataAccess(this IServiceCollection services, string connectionString)
     {
         // Register DbContext with SQLite
         services.AddDbContext<DashboardDbContext>(options =>
@@ -15,7 +15,5 @@ public static class ServiceCollectionExtensions
         
         // Register repository as IPlayerActivityRepository
         services.AddScoped<IPlayerActivityRepository, PlayerActivityRepository>();
-
-        return services;
     }
 }

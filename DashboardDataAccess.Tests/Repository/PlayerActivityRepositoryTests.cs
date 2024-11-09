@@ -42,7 +42,7 @@ public class PlayerActivityRepositoryTests
         var repository = new PlayerActivityRepository(context);
 
         // Act
-        var result = await repository.GetActivitiesByPlayerIdAsync("Player123");
+        var result = await repository.GetActivitiesByPlayerId("Player123");
 
         // Assert
         Assert.NotNull(result);
@@ -59,7 +59,7 @@ public class PlayerActivityRepositoryTests
         var repository = new PlayerActivityRepository(context);
 
         // Act
-        var result = await repository.GetActivitiesByPlayerIdAsync("NonExistentPlayer");
+        var result = await repository.GetActivitiesByPlayerId("NonExistentPlayer");
 
         // Assert
         Assert.NotNull(result);
@@ -74,7 +74,7 @@ public class PlayerActivityRepositoryTests
         var repository = new PlayerActivityRepository(context);
 
         // Act
-        var result = await repository.GetActivitiesByPlayerIdAsync("Player123");
+        var result = await repository.GetActivitiesByPlayerId("Player123");
 
         // Assert
         Assert.NotNull(result);
@@ -100,7 +100,7 @@ public class PlayerActivityRepositoryTests
         );
 
         // Act
-        await repository.AddPlayerActivityAsync(playerActivity);
+        await repository.AddActivity(playerActivity);
 
         // Assert
         var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "4");
