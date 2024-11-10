@@ -25,7 +25,8 @@ public class PlayerStatusRepositoryTests
         var statuses = new[]
         {
             new PlayerStatusDb { PlayerId = "Player123", Status = "Active", Reason = "Player is active" },
-            new PlayerStatusDb { PlayerId = "Player456", Status = "Suspicious", Reason = "Suspicious activity detected" }
+            new PlayerStatusDb { PlayerId = "Player456", Status = "Suspicious", Reason = "Suspicious activity detected" },
+            new PlayerStatusDb { PlayerId = "Player789", Status = "Banned", Reason = "Multiple violations" }
         };
 
         await context.PlayerStatuses.AddRangeAsync(statuses);
@@ -70,15 +71,15 @@ public class PlayerStatusRepositoryTests
         var context = await GetInMemoryDbContext();
         var repository = new PlayerStatusRepository(context);
 
-        var newStatus = new PlayerStatus("Player789", "Banned", "Player is banned");
+        var newStatus = new PlayerStatus("Player101", "Banned", "Player is banned");
 
         // Act
         await repository.CreatePlayerStatus(newStatus);
 
         // Assert
-        var savedStatus = await context.PlayerStatuses.FirstOrDefaultAsync(ps => ps.PlayerId == "Player789");
+        var savedStatus = await context.PlayerStatuses.FirstOrDefaultAsync(ps => ps.PlayerId == "Player101");
         Assert.NotNull(savedStatus);
-        Assert.Equal("Player789", savedStatus.PlayerId);
+        Assert.Equal("Player101", savedStatus.PlayerId);
         Assert.Equal("Banned", savedStatus.Status);
         Assert.Equal("Player is banned", savedStatus.Reason);
     }
@@ -118,5 +119,44 @@ public class PlayerStatusRepositoryTests
         // Ensure no status was added to the database
         var savedStatus = await context.PlayerStatuses.FirstOrDefaultAsync(ps => ps.PlayerId == "NonExistentPlayer");
         Assert.Null(savedStatus);
+    }
+    
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnListOfPlayerStatuses()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerStatusRepository(context);
+
+        // Act
+        var result = await repository.GetPlayerStatuses();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(3, result.Count);
+
+        // Verify properties of each retrieved status
+        Assert.Contains(result, ps => ps.PlayerId == "Player123" && ps.Status == PlayerStatusType.Active && ps.Reason == "Player is active");
+        Assert.Contains(result, ps => ps.PlayerId == "Player456" && ps.Status == PlayerStatusType.Suspicious && ps.Reason == "Suspicious activity detected");
+        Assert.Contains(result, ps => ps.PlayerId == "Player789" && ps.Status == PlayerStatusType.Banned && ps.Reason == "Multiple violations");
+    }
+
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnEmptyList_WhenNoStatusesExist()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<DashboardDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        var context = new DashboardDbContext(options);
+        var repository = new PlayerStatusRepository(context);
+
+        // Act
+        var result = await repository.GetPlayerStatuses();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
     }
 }

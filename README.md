@@ -1,6 +1,14 @@
 # Dashboard
 Building a Bot and Malicious Player Detection Dashboard
 
+# To run the project
+## DashboardAPI
+Navigate to ./DashboardAPI and run
+`dotnet run`
+## player-activities-app
+Navigate to ./player-activities-app and run
+`npm start`
+
 # Dependencies for running the DashboardAPI with SQLite
 ## to install ef tools globally
 `dotnet tool install --global dotnet-ef`
@@ -22,3 +30,4 @@ Building a Bot and Malicious Player Detection Dashboard
  - [ ] async processing of activity detection
  - [ ] activity detection bulk optimizations
  - [ ] add logging and error handling in PlayerStatusController
+ - [ ] fancier ui with cypress tests included

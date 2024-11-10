@@ -127,4 +127,44 @@ public class PlayerStatusControllerTests
             "UpdatePlayerStatus should be called once with the provided DTO"
         );
     }
+    
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnOk_WhenStatusesAreFound()
+    {
+        // Arrange
+        var statuses = new List<PlayerStatusListingDto>
+        {
+            new PlayerStatusListingDto("Player123", "Active", "Player is active"),
+            new PlayerStatusListingDto("Player456", "Suspended", "Suspicious activity detected")
+        };
+
+        _mockPlayerStatusService
+            .Setup(service => service.GetPlayerStatuses())
+            .ReturnsAsync(statuses);
+
+        // Act
+        var result = await _controller.GetPlayerStatuses();
+
+        // Assert
+        var okResult = Assert.IsType<OkObjectResult>(result);
+        Assert.Equal(200, okResult.StatusCode);
+        Assert.Equal(statuses, okResult.Value);
+    }
+
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnNotFound_WhenNoStatusesAreFound()
+    {
+        // Arrange
+        _mockPlayerStatusService
+            .Setup(service => service.GetPlayerStatuses())
+            .ReturnsAsync(new List<PlayerStatusListingDto>()); // Empty list
+
+        // Act
+        var result = await _controller.GetPlayerStatuses();
+
+        // Assert
+        var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
+        Assert.Equal(404, notFoundResult.StatusCode);
+        Assert.Equal("No statuses found", notFoundResult.Value);
+    }
 }

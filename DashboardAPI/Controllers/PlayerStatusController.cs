@@ -9,7 +9,7 @@ namespace DashboardAPI.Controllers;
 public class PlayerStatusController(IPlayerStatusService playerStatusService) : ControllerBase
 {
     /// this endpoint could be an odata endpoint or a separate search service
-    /// all together. I added here for brevity, hence no unit tests
+    /// all together. I added here for brevity
     [HttpGet("statuses")]
     public async Task<ActionResult> GetPlayerStatuses()
     {

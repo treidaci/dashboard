@@ -9,25 +9,27 @@ namespace DashboardDataAccessTests.Repository;
 
 public class PlayerActivityRepositoryTests
 {
-    private async Task<DashboardDbContext> GetInMemoryDbContext()
+    private async Task<DashboardDbContext> GetInMemoryDbContext(DateTime? timespan = null)
     {
         var options = new DbContextOptionsBuilder<DashboardDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString())
             .Options;
 
         var context = new DashboardDbContext(options);
-        await SeedTestData(context);
+        await SeedTestData(context, timespan);
 
         return context;
     }
 
-    private async Task SeedTestData(DashboardDbContext context)
+    private async Task SeedTestData(DashboardDbContext context, DateTime? timespan = null)
     {
+        var actualTimeSpan = timespan ?? DateTime.UtcNow;
         var activities = new List<PlayerActivityDb>
         {
-            new() { Id = "1", PlayerId = "Player123", Action = "Move", Timestamp = DateTime.UtcNow, Status = "Suspicious", Reason = null },
-            new() { Id = "2", PlayerId = "Player123", Action = "Jump", Timestamp = DateTime.UtcNow, Status = "Legitimate", Reason = "Inhuman speed" },
-            new() { Id = "3", PlayerId = "Player456", Action = "Run", Timestamp = DateTime.UtcNow, Status = "Malicious", Reason = null }
+            new() { Id = "1", PlayerId = "Player123", Action = "Move", Timestamp = actualTimeSpan.AddMilliseconds(-50), Status = "Suspicious", Reason = null },
+            new() { Id = "2", PlayerId = "Player123", Action = "Jump", Timestamp = actualTimeSpan.AddMilliseconds(50), Status = "Legitimate", Reason = "Inhuman speed" },
+            new() { Id = "3", PlayerId = "Player123", Action = "Run", Timestamp = actualTimeSpan.AddSeconds(1), Status = "Legitimate", Reason = null },
+            new() { Id = "4", PlayerId = "Player456", Action = "Walk", Timestamp = actualTimeSpan.AddMilliseconds(-50), Status = "Malicious", Reason = "Unauthorized access" }
         };
 
         await context.PlayerActivities.AddRangeAsync(activities);
@@ -47,7 +49,7 @@ public class PlayerActivityRepositoryTests
         // Assert
         Assert.NotNull(result);
         var resultList = result.ToList();
-        Assert.Equal(2, resultList.Count); // Two activities for Player123
+        Assert.Equal(3, resultList.Count);
         Assert.All(resultList, a => Assert.Equal("Player123", a.PlayerId));
     }
 
@@ -93,7 +95,7 @@ public class PlayerActivityRepositoryTests
         var repository = new PlayerActivityRepository(context);
 
         var playerActivity = new PlayerActivity(
-            id: "4",
+            id: "5",
             playerId: "Player123",
             action: "Move",
             timestamp: DateTime.UtcNow
@@ -103,7 +105,7 @@ public class PlayerActivityRepositoryTests
         await repository.AddActivity(playerActivity);
 
         // Assert
-        var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "4");
+        var savedActivity = await context.PlayerActivities.FirstOrDefaultAsync(a => a.Id == "5");
         Assert.NotNull(savedActivity);
         Assert.Equal(playerActivity.PlayerId, savedActivity.PlayerId);
         Assert.Equal(playerActivity.Action, savedActivity.Action);
@@ -233,5 +235,64 @@ public class PlayerActivityRepositoryTests
         // Assert
         Assert.NotNull(result);
         Assert.Empty(result); // Expecting an empty list
+    }
+    
+    [Fact]
+    public async Task GetActivitiesWithinThreshold_ShouldReturnActivitiesWithinThreshold()
+    {
+        // Arrange
+        var timespan = DateTime.UtcNow;
+        var context = await GetInMemoryDbContext(timespan);
+        var repository = new PlayerActivityRepository(context);
+        
+        var activity = new PlayerActivity("6", "Player123", "Move", timespan);
+        var threshold = TimeSpan.FromMilliseconds(100);
+
+        // Act
+        var result = await repository.GetActivitiesWithinThreshold(activity, threshold);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count()); // Expecting 2 activities within the threshold
+        Assert.All(result, a => Assert.Equal("Player123", a.PlayerId));
+    }
+
+    [Fact]
+    public async Task GetActivitiesWithinThreshold_ShouldNotReturnActivitiesOutsideThreshold()
+    {
+        // Arrange
+        var context = await GetInMemoryDbContext();
+        var repository = new PlayerActivityRepository(context);
+
+        var activity = new PlayerActivity("6", "Player123", "Move", DateTime.UtcNow);
+        var threshold = TimeSpan.FromMilliseconds(50); // Only activity within 50 ms should be retrieved
+
+        // Act
+        var result = await repository.GetActivitiesWithinThreshold(activity, threshold);
+
+        // Assert
+        Assert.Single(result);
+        Assert.Equal("Player123", result.First().PlayerId);
+        Assert.Equal("Jump", result.First().Action);
+    }
+    
+    [Fact]
+    public async Task GetActivitiesWithinThreshold_ShouldIgnoreTheCurrentActivity()
+    {
+        // Arrange
+        var timespan = DateTime.UtcNow;
+        var context = await GetInMemoryDbContext(timespan);
+        var repository = new PlayerActivityRepository(context);
+        
+        var activity = new PlayerActivity("1", "Player123", "Move", timespan);
+        var threshold = TimeSpan.FromMilliseconds(100);
+
+        // Act
+        var result = await repository.GetActivitiesWithinThreshold(activity, threshold);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Single(result);
+        Assert.NotEqual(activity.Id, result.First().Id);
     }
 }

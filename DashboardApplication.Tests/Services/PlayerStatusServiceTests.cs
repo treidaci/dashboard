@@ -139,4 +139,47 @@ public class PlayerStatusServiceTests
         _mockRepository.Verify(repo => repo.UpdatePlayerStatus(It.IsAny<PlayerStatus>()), Times.Never,
             "UpdatePlayerStatus should not be called if the status does not exist");
     }
+    
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnListOfPlayerStatusListingDto_WhenStatusesAreFound()
+    {
+        // Arrange
+        var playerStatuses = new List<PlayerStatus>
+        {
+            new PlayerStatus("Player123", "Active", "Player is active"),
+            new PlayerStatus("Player456", "Suspicious", "Suspicious activity detected")
+        };
+
+        _mockRepository.Setup(repo => repo.GetPlayerStatuses())
+            .ReturnsAsync(playerStatuses);
+
+        // Act
+        var result = await _service.GetPlayerStatuses();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(playerStatuses.Count, result.Count);
+
+        for (var i = 0; i < playerStatuses.Count; i++)
+        {
+            Assert.Equal(playerStatuses[i].PlayerId, result[i].PlayerId);
+            Assert.Equal(playerStatuses[i].Status.ToString(), result[i].Status);
+            Assert.Equal(playerStatuses[i].Reason, result[i].Reason);
+        }
+    }
+
+    [Fact]
+    public async Task GetPlayerStatuses_ShouldReturnEmptyList_WhenNoStatusesAreFound()
+    {
+        // Arrange
+        _mockRepository.Setup(repo => repo.GetPlayerStatuses())
+            .ReturnsAsync([]);
+
+        // Act
+        var result = await _service.GetPlayerStatuses();
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Empty(result);
+    }
 }
