@@ -8,5 +8,7 @@ public static class ServiceScopeExtensions
     {
         var dbContext = serviceScope.ServiceProvider.GetRequiredService<DashboardDbContext>();
         dbContext.Database.EnsureCreated();
+        
+        // add migrations here
     }
 }

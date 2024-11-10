@@ -1,0 +1,53 @@
+@DashboardAPI_HostAddress = http://localhost:5237/api
+@playerId = Player123
+
+### Get Player Status
+GET {{DashboardAPI_HostAddress}}/players/{{playerId}}/status
+Accept: application/json
+
+###
+
+### Create Player Status
+POST {{DashboardAPI_HostAddress}}/players/{{playerId}}/status
+Content-Type: application/json
+
+{
+  "status": "Active",
+  "reason": "Player has started a new session"
+}
+
+###
+
+### Update Player Status
+PUT {{DashboardAPI_HostAddress}}/players/{{playerId}}/status
+Content-Type: application/json
+
+{
+  "status": "Suspicious",
+  "reason": "Suspicious activity detected"
+}
+
+###
+
+### Create Player Status in a loop
+< {%
+    request.variables.set("statuses", [
+        {"status": "Active", "reason": "Player started a session"},
+        {"status": "Suspicious", "reason": "Suspicious activity detected"},
+        {"status": "Banned", "reason": "Repeated violations of rules"},
+        {"status": "Active", "reason": "Account reinstated after review"}
+    ])
+%}
+POST {{DashboardAPI_HostAddress}}/players/{{playerId}}/status
+Content-Type: application/json
+
+{
+  "status": "{{$.statuses..status}}",
+  "reason": "{{$.statuses..reason}}"
+}
+> {%
+    let current = request.variables.get("statuses")[request.iteration()]
+    client.test(`Status ${current.status} with reason ${current.reason}`, () => {
+        client.assert(response.status == 200)
+    })
+%}

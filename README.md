@@ -16,3 +16,5 @@ Building a Bot and Malicious Player Detection Dashboard
  - [ ] read di configuration from configuration file
  - [ ] logging in the layers
  - [ ] async processing of activity detection
+ - [ ] activity detection bulk optimizations
+ - [ ] add logging and error handling in PlayerStatusController

@@ -2,10 +2,9 @@ using DashboardCore.Repositories;
 using DashboardDataAccess;
 using DashboardDataAccess.DependencyInjection;
 using DashboardDataAccess.Repositories;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DashboardDataAccessTests.ServiceCollectionExtensions;
+namespace DashboardDataAccessTests.DependencyInjection;
 
 public class ServiceCollectionExtensionsTests
 {

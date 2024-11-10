@@ -16,5 +16,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDetectionService, DetectionService>();
         services.AddScoped<IDetectionRule, IdenticalActionRule>();
         services.AddScoped<IDetectionRule, InhumanSpeedActionRule>();
+        
+        services.AddScoped<IPlayerStatusService, PlayerStatusService>();
     }
 }
