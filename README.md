@@ -9,6 +9,10 @@ Building a Bot and Malicious Player Detection Dashboard
 # To run the project
 ## DashboardAPI
 Navigate to ./DashboardAPI and run
+## To seed data
+- You can run the `Create Player Status` from the `DashboardAPI/PlayerStatusController.http` and the `Create Player Activity in a loop` from the `DashboardAPI/PlayerActivityController.http`
+- The front-end views activities for `Player123` but you can add for any other player as well 
+- you can install REST Client in VS Code to run these scripts; Rider and VS should run them by default (note: I used these scripts in Rider, the looping might not work in VS/VS Code)
 `dotnet run`
 ## player-activities-app
 Navigate to ./player-activities-app and run
