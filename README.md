@@ -7,6 +7,10 @@ Building a Bot and Malicious Player Detection Dashboard
 ## to update ef tools globally
 `dotnet tool update --global dotnet-ef`
 
+# Dependencies for running the player-activities-app
+## install dependencies
+`npm i`
+
 
 # Nice to haves
  - [ ] global exception handling
