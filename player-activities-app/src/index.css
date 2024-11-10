@@ -9,21 +9,3 @@ body {
   background-color: #f8f9fa;
   color: #333;
 }
-
-.activities-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-@media (max-width: 768px) {
-  .activity-card {
-      width: 90%;
-  }
-}
-
-@media (min-width: 769px) {
-  .activity-card {
-      width: 45%;
-  }
-}

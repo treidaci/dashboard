@@ -1,5 +1,6 @@
 @DashboardAPI_HostAddress = http://localhost:5237/api
 @playerId = Player123
+@activityId = 464f6155-52ac-420f-b921-4421ef6348ae
 
 ### Get Player Activities
 GET {{DashboardAPI_HostAddress}}/players/{{playerId}}/activities
@@ -44,3 +45,34 @@ Content-Type: application/json
         client.assert(response.status == 200)
     })
 %}
+
+
+### Update Player Activity - Legitimate
+PUT {{DashboardAPI_HostAddress}}/players/{{playerId}}/activity
+Content-Type: application/json
+
+{
+  "id": "{{activityId}}",
+  "status": "Legitimate",
+  "reason": "Marked as legitimate by admin"
+}
+
+### Update Player Activity - Suspicious
+PUT {{DashboardAPI_HostAddress}}/players/{{playerId}}/activity
+Content-Type: application/json
+
+{
+  "id": "{{activityId}}",
+  "status": "Suspicious",
+  "reason": "Marked as suspicious due to high frequency"
+}
+
+### Update Player Activity - Malicious
+PUT {{DashboardAPI_HostAddress}}/players/{{playerId}}/activity
+Content-Type: application/json
+
+{
+  "id": "{{activityId}}",
+  "status": "Malicious",
+  "reason": "Malicious action detected"
+}

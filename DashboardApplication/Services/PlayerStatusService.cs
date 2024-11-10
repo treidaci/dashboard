@@ -13,6 +13,12 @@ public class PlayerStatusService(IPlayerStatusRepository repository) : IPlayerSt
         return playerStatus == null ? null : new PlayerStatusDto(playerStatus.Status.ToString(), playerStatus.Reason);
     }
 
+    public async Task<List<PlayerStatusListingDto>> GetPlayerStatuses()
+    {
+        var playerStatuses =  await repository.GetPlayerStatuses();
+        return playerStatuses.Any() ? playerStatuses.Select(s => new PlayerStatusListingDto(s.PlayerId, s.Status.ToString(), s.Reason)).ToList() : [];
+    }
+
     public async Task CreatePlayerStatus(string playerId, PlayerStatusDto playerStatusDto)
     {
         var playerStatus = await repository.GetPlayerStatus(playerId);

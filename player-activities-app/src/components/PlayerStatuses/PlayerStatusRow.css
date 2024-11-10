@@ -1,0 +1,15 @@
+.review-icon {
+    color: #f39c12;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.activity-link {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.activity-link:hover {
+    text-decoration: underline;
+}

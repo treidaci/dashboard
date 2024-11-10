@@ -1,0 +1,55 @@
+.activity-card {
+    background-color: #f4f4f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 10px;
+    text-align: left;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.Suspicious {
+    border: 2px solid #ff4d4d; /* Red border for suspicious status */
+    background-color: #ffcccb; /* Salmon pink background for suspicious status */
+}
+
+.Malicious {
+    background-color: #f18aa2; /* Red-ish for malicious status */
+}
+.Legitimate {
+    background-color: #a3eaee; /* light green for legitimate */
+}
+
+
+.activity-card h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.status-options {
+    margin-top: 10px;
+}
+
+.status-options label {
+    margin-right: 5px;
+    font-weight: bold;
+}
+
+.status-options select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+@media (max-width: 768px) {
+    .activity-card {
+        width: 90%;
+    }
+  }
+  
+  @media (min-width: 769px) {
+    .activity-card {
+        width: 45%;
+    }
+  }
+  

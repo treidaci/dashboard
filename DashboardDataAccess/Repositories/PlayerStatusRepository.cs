@@ -47,4 +47,13 @@ internal class PlayerStatusRepository(DashboardDbContext context) : IPlayerStatu
 
         await context.SaveChangesAsync();
     }
+
+    public async Task<List<PlayerStatus>> GetPlayerStatuses()
+    {
+        return (await context.PlayerStatuses.ToListAsync()).Select(playerStatusDb => new PlayerStatus(
+            playerStatusDb.PlayerId,
+            playerStatusDb.Status,
+            playerStatusDb.Reason
+        )).ToList();
+    }
 }

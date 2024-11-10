@@ -1,10 +1,10 @@
 import React from 'react';
 import PlayerActivityCard from './PlayerActivityCard';
 
-const PlayerActivitiesList = ({ activities }) => (
+const PlayerActivitiesList = ({ activities, playerId }) => (
     <div className="activities-list">
         {activities.map((activity) => (
-            <PlayerActivityCard key={activity.id} {...activity} />
+            <PlayerActivityCard key={activity.id} {...activity} playerId={playerId}/>
         ))}
     </div>
 );

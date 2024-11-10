@@ -5,13 +5,26 @@ using Microsoft.AspNetCore.Mvc;
 namespace DashboardAPI.Controllers;
 
 [ApiController]
-[Route("api/players/{playerId}/status")]
+[Route("api/players")]
 public class PlayerStatusController(IPlayerStatusService playerStatusService) : ControllerBase
 {
-    [HttpGet]
+    /// this endpoint could be an odata endpoint or a separate search service
+    /// all together. I added here for brevity, hence no unit tests
+    [HttpGet("statuses")]
+    public async Task<ActionResult> GetPlayerStatuses()
+    {
+        var statuses = await playerStatusService.GetPlayerStatuses();
+        if (statuses.Count == 0)
+        {
+            return NotFound($"No statuses found");
+        }
+
+        return Ok(statuses);
+    }
+    
+    [HttpGet("{playerId}/status")]
     public async Task<ActionResult> GetPlayerStatus(string playerId)
     {
-
         var status = await playerStatusService.GetPlayerStatus(playerId);
         if (status == null)
         {
@@ -21,7 +34,7 @@ public class PlayerStatusController(IPlayerStatusService playerStatusService) : 
         return Ok(status);
     }
     
-    [HttpPost]
+    [HttpPost("{playerId}/status")]
     public async Task<ActionResult> CreatePlayerStatus(string playerId, [FromBody] PlayerStatusDto? playerStatusDto)
     {
         if (playerStatusDto == null)
@@ -34,7 +47,7 @@ public class PlayerStatusController(IPlayerStatusService playerStatusService) : 
         return Ok();
     }
     
-    [HttpPut]
+    [HttpPut("{playerId}/status")]
     public async Task<ActionResult> UpdatePlayerStatus(string playerId, [FromBody] PlayerStatusDto? playerStatusDto)
     {
         if (playerStatusDto == null)

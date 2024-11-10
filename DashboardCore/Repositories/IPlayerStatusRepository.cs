@@ -7,4 +7,5 @@ public interface IPlayerStatusRepository
     Task<PlayerStatus?> GetPlayerStatus(string playerId);
     Task CreatePlayerStatus(PlayerStatus playerStatus);
     Task UpdatePlayerStatus(PlayerStatus playerStatus);
+    Task<List<PlayerStatus>> GetPlayerStatuses();
 }
